@@ -6,10 +6,10 @@ load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-model = genai.GenerativeModel('gemini-2.5-pro-exp-03-25')
+model = genai.GenerativeModel('gemini-2.5-pro')
 
 prompt = "Explain how neural networks work in simple terms."
 
-response = model.generate_content_async(prompt)
+response = model.generate_content(prompt)
 
 print(response.text)
