@@ -1,13 +1,12 @@
-import './App.css'
-import Button from '@mui/material/Button';
+import "./App.css";
+import ChatInterface from './pages/chatInterface.tsx'
 
 function App() {
-
   return (
     <div>
-      <Button variant="outlined">Arya is Dumb</Button>
+      <ChatInterface />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
