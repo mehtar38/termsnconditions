@@ -1,19 +1,9 @@
-// import Box from "@mui/material/Box";
+import Drawer from '../components/drawer.tsx';
 
 const chatInterface = () => {
   return (
     <>
-    {/* <Box
-      sx={{
-        width: 100,
-        height: 100,
-        borderRadius: 1,
-        bgcolor: "primary.main",
-        "&:hover": {
-          bgcolor: "primary.dark",
-        },
-      }}
-    /> */}
+    <Drawer/>
     </>
   );
 };
