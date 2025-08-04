@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const cors = require('cors');
+const cors = require("cors");
 app.use(cors());
 
 const multer = require("multer");
@@ -76,8 +76,7 @@ app.post("/file-upload", upload.single("file"), async (req, res) => {
     const prompt =
       "Please analyze the attached document, which is a Terms and Conditions or Terms of Service agreement.  (E.g., clear privacy policy, easy opt-out, fair dispute resolution), Flagged Risky or Ambiguous Clauses: (Include short quotes or clause references), Overall Risk Rating: (Safe / Moderate Risk / High Risk), Summary of Key Takeaways: (Concise overview) Final Verdict: (Would you recommend signing or accepting this agreement? Why or why not?), Closing Note: (Any actions the user should take — e.g., ask the company for clarification, avoid accepting) ";
     const result = await model.generateContent(
-      { text: prompt },
-      { text: `---Document Start ---\n${fileContent}\n ---Document End ---` }
+      `${prompt}\n\n---Document Start ---\n${fileContent}\n---Document End ---`
     );
     const response = await result.response;
     const geminiText = response.text();
