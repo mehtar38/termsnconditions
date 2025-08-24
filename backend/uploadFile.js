@@ -86,6 +86,7 @@ app.post("/file-upload", upload.single("file"), async (req, res) => {
     console.log("Delete Temp file");
 
     res.json({
+      role: "assistant",
       message: "File processed",
       geminiAnalysis: geminiText,
     });
