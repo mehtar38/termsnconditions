@@ -13,7 +13,7 @@ const chatInterface = () => {
       <div className="input-area">
         <FileUploadIcon style={{ cursor: 'pointer', marginRight: '10px' }} />
               <TextField id="outlined-basic" sx={{ backgroundColor: 'rgba(255, 255, 255, 1)', color: 'white', width: '500px' }} variant="outlined" placeholder='Type your message here!'/>
-      </div>
+      </div> 
     </div>
     </>
   );
