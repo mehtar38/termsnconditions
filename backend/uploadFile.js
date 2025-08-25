@@ -88,7 +88,7 @@ app.post("/file-upload", upload.single("file"), async (req, res) => {
     res.json({
       role: "assistant",
       message: "File processed",
-      geminiAnalysis: geminiText,
+      text: geminiText,
     });
   } catch (error) {
     console.log("Processing error");

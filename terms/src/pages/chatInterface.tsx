@@ -3,6 +3,7 @@ import MessageList from '../components/MessageList';
 import ChatInput from '../components/ChatInput';
 import { sendFileMessage, sendTextMessage } from '../utils/apis/chatbotApi';
 import type { Message } from '../types/message';
+import Drawer from '../components/drawer';
 
 
 export default function ChatInterface() {
@@ -37,9 +38,12 @@ export default function ChatInterface() {
 
 
   return (
-    <div className="chat-container">
+  <div className="chat-page">
+    <Drawer />
+    <div className="chat-window">
       <MessageList messages={messages} />
       <ChatInput onSendText={handleSendText} onSendFile={handleSendFile} />
     </div>
+  </div>
   );
 }

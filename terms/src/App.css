@@ -11,3 +11,70 @@ body {
     justify-content: center;
     display: flex;
 }
+
+.chat-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  background: #f3f4f6; /* Tailwind gray-100 */
+}
+
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  height: 80vh;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.message-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+/* Message rows */
+.message-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+/* Chat bubbles */
+.message-bubble {
+  max-width: 70%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  word-break: break-word;
+}
+
+/* User (right side) */
+.user-bubble {
+  background: #3b82f6; /* Tailwind blue-500 */
+  color: white;
+  border-bottom-right-radius: 0.3rem;
+}
+
+/* Bot (left side) */
+.bot-bubble {
+  background: #e5e7eb; /* Tailwind gray-200 */
+  color: #111827; /* Tailwind gray-900 */
+  border-bottom-left-radius: 0.3rem;
+}
+
+/* Input stays at bottom */
+.chat-input {
+  display: flex;
+  padding: 0.75rem;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+}
