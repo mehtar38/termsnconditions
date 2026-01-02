@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>T&C Analyzer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔍 T&C Analyzer</h1>
+      <p class="subtitle">AI-Powered Terms & Conditions Analysis</p>
+    </header>
+
+    <div id="status" class="status">
+      <p>Scanning page for Terms & Conditions...</p>
+    </div>
+
+    <div id="analysis" class="analysis hidden">
+      <div class="recommendation" id="recommendation">
+        <span class="recommendation-badge" id="recommendationBadge">REVIEW</span>
+        <h2 id="recommendationText">Analyzing...</h2>
+      </div>
+
+      <div class="summary">
+        <h3>Summary</h3>
+        <p id="summaryText">Loading analysis...</p>
+      </div>
+
+      <div class="actions">
+        <button id="analyzeBtn" class="btn btn-primary">Analyze Current Page</button>
+        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      </div>
+    </div>
+
+    <div id="error" class="error hidden">
+      <p id="errorText"></p>
+      <button id="retryBtn" class="btn btn-primary">Retry</button>
+    </div>
+
+    <div class="footer">
+      <p>Powered by OpenAI & RAG</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+
+
+
+
