@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import MessageList from '../components/MessageList';
 import ChatInput from '../components/ChatInput';
 import { sendFileMessage, sendTextMessage, clearSessionContext, getSessionId } from '../utils/apis/chatbotApi';
@@ -12,9 +12,21 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [hasDocument, setHasDocument] = useState(false);
+  const [, setIsLoading] = useState(false);
 
 
   useEffect(() => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const analyzeUrl = urlParams.get('analyze');
+  
+    if (analyzeUrl) {
+      // Auto-send message about this URL
+      // addMessage('user', `Provide detailed analysis of T&C from: ${decodeURIComponent(analyzeUrl)}`);
+      handleSendText(`I want a detailed analysis of the Terms & Conditions from ${decodeURIComponent(analyzeUrl)}. Please explain the key points, risks, and whether I should accept.`);
+      window.history.replaceState({}, '', window.location.pathname); // clearing the URL parameter so it doesn't run again
+  }
+
     // Check for existing session on mount
     const currentSession = getSessionId();
     if (currentSession) {
@@ -33,17 +45,21 @@ export default function ChatInterface() {
     try {
       const resp = await sendTextMessage(text);
       addMessage(resp.role, resp.text);
+      setIsLoading(true);
       if (resp.sessionId) {
         setSessionId(resp.sessionId);
       }
     } catch (e: any) {
       addMessage('assistant', 'Error: ' + e.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
 
   const handleSendFile = async (file: File) => {
     addMessage('user', `Uploaded file: ${file.name}`);
+    setIsLoading(true);
     try {
       const resp = await sendFileMessage(file);
       addMessage(resp.role, resp.text);
@@ -53,6 +69,8 @@ export default function ChatInterface() {
       }
     } catch (e: any) {
       addMessage('assistant', 'Error: ' + e.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 

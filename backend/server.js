@@ -11,7 +11,8 @@ const path = require("path");
 const pdf = require("pdf-parse");
 const { v4: uuidv4 } = require("uuid");
 
-const { generateChatCompletion } = require("./services/openaiService");
+// const { generateChatCompletion } = require("./services/openaiService");
+const { generateChatCompletion} = require("./services/geminiService");
 const { storeDocument, searchRelevantChunks, deleteDocument } = require("./services/ragService");
 const { addMessage, getFormattedMessages, clearConversation } = require("./services/conversationService");
 
@@ -267,7 +268,7 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

@@ -13,19 +13,18 @@ const analyzeBtn = document.getElementById('analyzeBtn');
 const clearBtn = document.getElementById('clearBtn');
 const errorText = document.getElementById('errorText');
 const retryBtn = document.getElementById('retryBtn');
+const openChatBtn = document.getElementById('openChatBtn');
 
-/**
- * Show element
- */
 function show(element) {
-  element.classList.remove('hidden');
+  if (element) {
+    element.classList.remove('hidden');
+  }
 }
 
-/**
- * Hide element
- */
 function hide(element) {
-  element.classList.add('hidden');
+  if (element) {
+    element.classList.add('hidden');
+  }
 }
 
 /**
@@ -87,24 +86,25 @@ async function analyzeTerms(text, url) {
     hide(errorDiv);
     statusDiv.querySelector('p').textContent = 'Analyzing Terms & Conditions...';
 
+    console.log("Extracted Text Legnth: ", text.length, text);
+
     const response = await fetch(`${BACKEND_URL}/message`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        text: `Please analyze the following Terms and Conditions text and provide a concise response with:
-1. A simplified summary (2-3 sentences)
-2. Key risks or concerns (if any)
-3. A clear YES/NO recommendation on whether to accept
-4. Brief reasoning (1-2 sentences)
+        text: `Analyze these Terms & Conditions and provide ONLY:
+1. One word: YES, NO, or CAUTION
+2. One sentence summary (max 20 words)
+3. Top 2 concerns (if any), each max 10 words
 
-Format your response clearly with the recommendation at the start.
+Be extremely concise. Format:
+RECOMMENDATION: [YES/NO/CAUTION]
+SUMMARY: [one sentence]
+CONCERNS: [if any]
 
-Terms and Conditions text:
-${text}
-
-Source URL: ${url}`,
+Text: ${text.substring(0, 2000)}`,
       }),
     });
 
@@ -113,6 +113,17 @@ Source URL: ${url}`,
     }
 
     const data = await response.json();
+
+    // Store full analysis for chat
+    const tab = await getCurrentTab();
+    await chrome.storage.local.set({
+      [`analysis_${tab.url}`]: {
+        fullText: text,
+        summary: data.text,
+        url: url,
+        timestamp: Date.now()
+      }
+    });
     
     // Extract recommendation from response
     const recommendation = extractRecommendation(data.text);
@@ -248,6 +259,20 @@ clearBtn.addEventListener('click', () => {
   show(statusDiv);
 });
 retryBtn.addEventListener('click', init);
+
+openChatBtn.addEventListener('click', async () => {
+  const tab = await getCurrentTab();
+  const stored = await chrome.storage.local.get(`analysis_${tab.url}`);
+  
+  if (stored[`analysis_${tab.url}`]) {
+    const data = stored[`analysis_${tab.url}`];
+    const encodedUrl = encodeURIComponent(data.url);
+    
+    chrome.tabs.create({
+      url: `http://localhost:5173?analyze=${encodedUrl}`
+    });
+  }
+});
 
 // Initialize on load
 init();

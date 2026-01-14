@@ -2,7 +2,8 @@ const { ChromaClient } = require("chromadb");
 const path = require("path");
 const fs = require("fs");
 const { chunkText } = require("../utils/textProcessor");
-const { generateEmbeddings } = require("./openaiService");
+// const { generateEmbeddings } = require("./openaiService");
+const {generateEmbeddings} = require("./geminiService");
 const SimpleVectorStore = require("./simpleVectorStore");
 require("dotenv").config();
 
@@ -151,7 +152,8 @@ async function searchRelevantChunks(query, nResults = 5, documentId = null) {
     const coll = await getCollection();
     
     // Generate embedding for the query
-    const { generateEmbedding } = require("./openaiService");
+    // const { generateEmbedding } = require("./openaiService");
+    const { generateEmbedding} = require("./geminiService")
     const queryEmbedding = await generateEmbedding(query);
     
     // Build query options

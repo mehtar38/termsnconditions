@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -50,4 +50,429 @@
 
 
 
+ -->
 
+ <!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>T&C Analyzer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 380px;
+      min-height: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #1f2937;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      margin: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #f3f4f6;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .status {
+      background: #f3f4f6;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .status p {
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .analysis {
+      display: none;
+    }
+
+    .analysis.visible {
+      display: block;
+    }
+
+    .recommendation {
+      text-align: center;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .recommendation.yes {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .recommendation.no {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .recommendation.caution {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .recommendation-badge {
+      font-size: 32px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .recommendation-text {
+      font-size: 14px;
+      color: white;
+      opacity: 0.95;
+    }
+
+    .summary {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .summary p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #374151;
+      margin-bottom: 12px;
+    }
+
+    .summary strong {
+      color: #1f2937;
+      font-weight: 600;
+    }
+
+    .summary::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .summary::-webkit-scrollbar-track {
+      background: #e5e7eb;
+      border-radius: 3px;
+    }
+
+    .summary::-webkit-scrollbar-thumb {
+      background: #9ca3af;
+      border-radius: 3px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .secondary-btn {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    .secondary-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .open-chat-btn {
+      width: 100%;
+      margin-top: 8px;
+      background: white;
+      border: 2px solid #667eea;
+      color: #667eea;
+    }
+
+    .open-chat-btn:hover {
+      background: #f3f4f6;
+    }
+
+    .error {
+      display: none;
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .error.visible {
+      display: block;
+    }
+
+    .error p {
+      font-size: 13px;
+      color: #991b1b;
+      margin-bottom: 12px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 T&C Analyzer</h1>
+      <p>AI-Powered Analysis</p>
+    </div>
+
+    <div id="status" class="status">
+      <p>Scanning page...<span class="loading"></span></p>
+    </div>
+
+    <div id="error" class="error">
+      <p id="errorText"></p>
+      <button id="retryBtn" class="secondary-btn">Retry</button>
+    </div>
+
+    <div id="analysis" class="analysis">
+      <div id="recommendation" class="recommendation">
+        <div id="recommendationBadge" class="recommendation-badge"></div>
+        <div id="recommendationText" class="recommendation-text"></div>
+      </div>
+
+      <div class="summary" id="summaryContainer">
+        <p id="summaryText"></p>
+      </div>
+
+      <button id="openChatBtn" class="open-chat-btn">
+        💬 Open Full Analysis in Chat
+      </button>
+    </div>
+
+    <div class="actions">
+      <button id="analyzeBtn" class="primary-btn">Analyze Page</button>
+      <button id="clearBtn" class="secondary-btn">Clear</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>T&C Analyzer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      min-height: 500px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f3f4f6;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 4px;
+    }
+
+    .status {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .recommendation {
+      text-align: center;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .recommendation.yes {
+      background: #10b981;
+    }
+
+    .recommendation.no {
+      background: #ef4444;
+    }
+
+    .recommendation.caution {
+      background: #f59e0b;
+    }
+
+    .recommendation-badge {
+      font-size: 32px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .recommendation-text {
+      font-size: 14px;
+      color: white;
+    }
+
+    .summary {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      max-height: 180px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 8px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: #667eea;
+      color: white;
+    }
+
+    .secondary-btn {
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+
+    .chat-btn {
+      background: white;
+      border: 2px solid #667eea;
+      color: #667eea;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 T&C Analyzer</h1>
+    </div>
+
+    <!-- Status Section -->
+    <div id="status" class="status">
+      <p>Loading...</p>
+    </div>
+
+    <!-- Error Section -->
+    <div id="error" class="hidden" style="background: #fee2e2; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+      <p id="errorText" style="color: #991b1b; font-size: 13px; margin-bottom: 12px;"></p>
+      <button id="retryBtn" class="secondary-btn">Retry</button>
+    </div>
+
+    <!-- Analysis Section -->
+    <div id="analysis" class="hidden">
+      <div id="recommendation" class="recommendation">
+        <div id="recommendationBadge" class="recommendation-badge">-</div>
+        <div id="recommendationText" class="recommendation-text">-</div>
+      </div>
+
+      <div class="summary">
+        <p id="summaryText">No summary available</p>
+      </div>
+
+      <button id="openChatBtn" class="chat-btn">
+        💬 Open Full Analysis in Chat
+      </button>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="margin-top: 16px;">
+      <button id="analyzeBtn" class="primary-btn">Analyze This Page</button>
+      <button id="clearBtn" class="secondary-btn">Clear</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
